@@ -14,27 +14,11 @@ def get_drive_service():
     from google.oauth2 import service_account
     from googleapiclient.discovery import build
     import streamlit as st
+    import json
 
     scopes = ["https://www.googleapis.com/auth/drive.readonly"]
 
-    def get_secret(key):
-        try:
-            return os.getenv(key) or st.secrets[key]
-        except Exception:
-            return os.getenv(key)
-
-    creds_path = get_secret("GOOGLE_CREDENTIALS_PATH")
-
-    # Only require path if JSON is not provided
-    has_json = False
-    try:
-        has_json = "GOOGLE_CREDENTIALS_JSON" in st.secrets
-    except Exception:
-        has_json = False
-
-    if not has_json and not creds_path:
-        raise Exception("Provide either GOOGLE_CREDENTIALS_JSON or GOOGLE_CREDENTIALS_PATH")
-
+    # ✅ ONLY use JSON from secrets
     if "GOOGLE_CREDENTIALS_JSON" in st.secrets:
         info = json.loads(st.secrets["GOOGLE_CREDENTIALS_JSON"])
         creds = service_account.Credentials.from_service_account_info(
@@ -42,10 +26,7 @@ def get_drive_service():
             scopes=scopes
         )
     else:
-        creds = service_account.Credentials.from_service_account_file(
-            creds_path,
-            scopes=scopes
-        )
+        raise Exception("GOOGLE_CREDENTIALS_JSON missing in secrets")
 
     return build("drive", "v3", credentials=creds)
 
