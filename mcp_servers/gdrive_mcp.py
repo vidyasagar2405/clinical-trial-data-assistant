@@ -2,6 +2,7 @@ import os
 import io
 from dotenv import load_dotenv
 from mcp.server.fastmcp import FastMCP
+import json
 
 load_dotenv()
 
@@ -9,31 +10,42 @@ load_dotenv()
 mcp = FastMCP("GoogleDrive Server")
 
 def get_drive_service():
-    """Handles OAuth2 authentication and returns the Drive API service."""
-    from google.oauth2.credentials import Credentials
-    from google_auth_oauthlib.flow import InstalledAppFlow
-    from google.auth.transport.requests import Request
+    """Service Account authentication for Google Drive (Cloud-safe)."""
+    from google.oauth2 import service_account
     from googleapiclient.discovery import build
+    import streamlit as st
 
-    # Scope for reading files and metadata
     scopes = ["https://www.googleapis.com/auth/drive.readonly"]
-    token_path = os.getenv("GOOGLE_TOKEN_PATH", "./credentials/google_token.json")
-    creds_path = os.getenv("GOOGLE_CREDENTIALS_PATH", "./credentials/google_credentials.json")
 
-    if not os.path.exists(creds_path):
-        raise FileNotFoundError(f"Google credentials file not found: {creds_path}")
+    def get_secret(key):
+        try:
+            return os.getenv(key) or st.secrets[key]
+        except Exception:
+            return os.getenv(key)
 
-    creds = None
-    if os.path.exists(token_path):
-        creds = Credentials.from_authorized_user_file(token_path, scopes)
+    creds_path = get_secret("GOOGLE_CREDENTIALS_PATH")
 
-    if not creds:
-        raise Exception("Google token not found. Generate locally before deployment.")
+    # Only require path if JSON is not provided
+    has_json = False
+    try:
+        has_json = "GOOGLE_CREDENTIALS_JSON" in st.secrets
+    except Exception:
+        has_json = False
 
-    if creds.expired and creds.refresh_token:
-        creds.refresh(Request())
-    elif creds.expired:
-        raise Exception("Token expired. Regenerate locally.")
+    if not has_json and not creds_path:
+        raise Exception("Provide either GOOGLE_CREDENTIALS_JSON or GOOGLE_CREDENTIALS_PATH")
+
+    if "GOOGLE_CREDENTIALS_JSON" in st.secrets:
+        info = json.loads(st.secrets["GOOGLE_CREDENTIALS_JSON"])
+        creds = service_account.Credentials.from_service_account_info(
+            info,
+            scopes=scopes
+        )
+    else:
+        creds = service_account.Credentials.from_service_account_file(
+            creds_path,
+            scopes=scopes
+        )
 
     return build("drive", "v3", credentials=creds)
 
@@ -51,9 +63,10 @@ def list_drive_files(query: str = "") -> dict:
         # If no query is provided, explicitly list files in the 'root' folder.
         # We also ensure trashed files are ignored for accuracy.
         if not query or not query.strip():
-            q = "'root' in parents and trashed = false"
+            q = "trashed = false"
         else:
-            q = f"name contains '{query}' and trashed = false"
+            safe_query = query.replace("'", "\\'")
+            q = f"name contains '{safe_query}' and trashed = false"
             
         results = service.files().list(
             q=q,
@@ -133,7 +146,8 @@ def search_drive_files(keyword: str) -> dict:
     try:
         service = get_drive_service()
         # Search metadata and full text while excluding the trash
-        q = f"(name contains '{keyword}' or fullText contains '{keyword}') and trashed = false"
+        safe_keyword = keyword.replace("'", "\\'")
+        q = f"(name contains '{safe_keyword}' or fullText contains '{safe_keyword}') and trashed = false"
         
         results = service.files().list(
             q=q,
