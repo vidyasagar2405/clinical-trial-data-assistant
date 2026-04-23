@@ -1,0 +1,7 @@
+STUDYID,USUBJID,VSTEST,VSVAL,UNIT,VISIT
+STUDY-001,SUBJ-001,Heart Rate,72,bpm,Baseline
+STUDY-001,SUBJ-001,Blood Pressure,120/80,mmHg,Week 1
+STUDY-001,SUBJ-002,Heart Rate,88,bpm,Baseline
+STUDY-001,SUBJ-003,Temperature,98.6,F,Baseline
+STUDY-001,SUBJ-004,Blood Pressure,140/90,mmHg,Week 2
+STUDY-001,SUBJ-005,Heart Rate,76,bpm,Week 1

@@ -1,0 +1,6 @@
+STUDYID,USUBJID,AEDECOD,AESER,SEVERITY,RELATIONSHIP
+STUDY-001,SUBJ-001,Headache,No,Mild,Not Related
+STUDY-001,SUBJ-002,Nausea,No,Moderate,Possibly Related
+STUDY-001,SUBJ-003,Fatigue,Yes,Severe,Related
+STUDY-001,SUBJ-004,Dizziness,No,Mild,Unrelated
+STUDY-001,SUBJ-005,Liver Toxicity,Yes,Severe,Related

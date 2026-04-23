@@ -1,0 +1,45 @@
+# ===============================
+# 🔐 Secrets & Environment
+# ===============================
+.env
+.streamlit/secrets.toml
+
+# ===============================
+# 🔐 Credentials (VERY IMPORTANT)
+# ===============================
+credentials/
+*.json
+
+# keep structure but not files
+!credentials/
+!credentials/.gitkeep
+
+# ===============================
+# 🧠 Python Cache / Build
+# ===============================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.cache
+
+# ===============================
+# 📦 Virtual Environment
+# ===============================
+clinical/
+
+# ===============================
+# 🧪 IDE / Editor Files
+# ===============================
+.vscode/
+
+# ===============================
+# 🧾 Logs
+# ===============================
+*.log
+
+# ===============================
+# 📂 OS Files
+# ===============================
+.DS_Store
+Thumbs.db

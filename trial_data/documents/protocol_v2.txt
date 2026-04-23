@@ -1,0 +1,20 @@
+Clinical Trial Protocol – STUDY-001
+
+Objective:
+Evaluate safety and efficacy of DrugA vs DrugB.
+
+Inclusion Criteria:
+- Age > 18
+- Diagnosed condition X
+
+Dose Reduction Rules:
+- Reduce dose if ALT > 50 U/L
+- Stop treatment if severe adverse event occurs
+
+Safety Monitoring:
+- Monitor liver enzymes weekly
+- Record all adverse events
+
+Endpoints:
+- Primary: Symptom improvement
+- Secondary: Reduction in adverse events

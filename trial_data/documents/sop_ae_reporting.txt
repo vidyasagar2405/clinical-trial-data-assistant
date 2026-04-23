@@ -1,0 +1,13 @@
+Standard Operating Procedure – Adverse Event Reporting
+
+All adverse events must be:
+- Recorded within 24 hours
+- Categorized by severity (Mild, Moderate, Severe)
+- Evaluated for relationship to drug
+
+Serious Adverse Events:
+- Must be reported immediately
+- Require regulatory submission
+
+Signal Detection:
+- Multiple severe events trigger safety review
