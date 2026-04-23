@@ -100,7 +100,7 @@ def search_notion(query: str) -> dict:
 
 
 # ─────────────────────────────────────────────────────────────
-# 4. RECURSIVE BLOCK FETCH (IMPORTANT FIX)
+# 4. RECURSIVE BLOCK FETCH (IMPORTANT FIX).
 # ─────────────────────────────────────────────────────────────
 def _fetch_all_blocks(notion, block_id: str) -> List[Dict]:
     all_blocks = []
