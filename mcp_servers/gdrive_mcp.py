@@ -3,6 +3,7 @@ import io
 from dotenv import load_dotenv
 from mcp.server.fastmcp import FastMCP
 import json
+import traceback
 
 load_dotenv()
 
@@ -51,8 +52,10 @@ def list_drive_files(query: str = "") -> dict:
             
         results = service.files().list(
             q=q,
-            pageSize=50, # Increased page size to ensure more files are visible at once
-            fields="files(id, name, mimeType, modifiedTime, size)"
+            pageSize=50,
+            fields="files(id, name, mimeType, modifiedTime, size)",
+            supportsAllDrives=True,
+            includeItemsFromAllDrives=True
         ).execute()
         
         files = results.get("files", [])
@@ -64,7 +67,10 @@ def list_drive_files(query: str = "") -> dict:
             "message": "If you cannot find a specific file, try using the search_drive_files tool for a deep search."
         }
     except Exception as e:
-        return {"error": f"Drive API Error: {str(e)}"}
+        return {
+                "error": str(e),
+                "trace": traceback.format_exc()
+            }
 
 @mcp.tool()
 def read_drive_file(file_id: str) -> dict:
@@ -77,7 +83,11 @@ def read_drive_file(file_id: str) -> dict:
 
         service = get_drive_service()
         # Fetch metadata first to determine how to handle the file
-        meta = service.files().get(fileId=file_id, fields="name,mimeType").execute()
+        meta = service.files().get(
+            fileId=file_id,
+            fields="name,mimeType",
+            supportsAllDrives=True
+        ).execute()
         name = meta.get("name", "unknown_file")
         mime = meta.get("mimeType", "")
 
@@ -92,7 +102,10 @@ def read_drive_file(file_id: str) -> dict:
             }
 
         # Handle standard files (PDFs, TXT, CSV)
-        request = service.files().get_media(fileId=file_id)
+        request = service.files().get_media(
+            fileId=file_id,
+            supportsAllDrives=True
+        )
         buffer = io.BytesIO()
         downloader = MediaIoBaseDownload(buffer, request)
         done = False
@@ -131,10 +144,12 @@ def search_drive_files(keyword: str) -> dict:
         q = f"(name contains '{safe_keyword}' or fullText contains '{safe_keyword}') and trashed = false"
         
         results = service.files().list(
-            q=q,
-            pageSize=20,
-            fields="files(id, name, mimeType, modifiedTime)"
-        ).execute()
+                q=q,
+                pageSize=20,
+                fields="files(id, name, mimeType, modifiedTime)",
+                supportsAllDrives=True,
+                includeItemsFromAllDrives=True
+            ).execute()
         
         files = results.get("files", [])
         return {
