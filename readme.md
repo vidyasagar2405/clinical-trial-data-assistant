@@ -1,4 +1,4 @@
-# 🧠 Clinical Trial Data Assistant
+# Clinical Trial Data Assistant
 
 An AI-powered assistant designed to analyze clinical trial data (SDTM domains) and retrieve supporting documents using MCP-based tool integration (Google Drive, Notion, Web Search).
 
