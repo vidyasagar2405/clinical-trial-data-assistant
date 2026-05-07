@@ -130,7 +130,7 @@ This project uses MCP to:
 
 Deployed on **Streamlit Community Cloud**
 
-👉 [Live Application](https://clinical-trial-data-assistant-75ws9gvdgbjzc5evbsfaub.streamlit.app)
+👉 [Live Application](https://huggingface.co/spaces/vidyasagar2405/Clinical-Trial-Data-Assistant)
 
 ---
 
