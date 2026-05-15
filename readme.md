@@ -128,7 +128,7 @@ This project uses MCP to:
 
 ## 🌍 Deployment
 
-Deployed on **Streamlit Community Cloud**
+Deployed on **Hugging Face Cloud**
 
 👉 [Live Application](https://huggingface.co/spaces/vidyasagar2405/Clinical-Trial-Data-Assistant)
 
